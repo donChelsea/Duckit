@@ -22,7 +22,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.duckit.presentation.navigation.DuckitTopAppBar
-import com.example.duckit.presentation.navigation.NavRoute
+import com.example.duckit.presentation.navigation.ScreenRoute
+import com.example.duckit.presentation.screen.auth.ui.AuthScreen
 import com.example.duckit.presentation.screen.home.ui.HomeScreen
 import com.example.duckit.ui.theme.DuckitTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,28 +37,29 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = navBackStackEntry?.destination?.route
-            @Composable fun actions() = if (true) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Sign in",
-                    )
+            @Composable fun actions() =
+                if (currentScreen != ScreenRoute.Access.name) {
+                    IconButton(onClick = { navController.navigate(ScreenRoute.Access.name) }) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "Sign in",
+                        )
+                    }
+                } else {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Create,
+                            contentDescription = "Create post",
+                        )
+                    }
                 }
-            } else {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Create,
-                        contentDescription = "Create post",
-                    )
-                }
-            }
 
             DuckitTheme {
                 Scaffold(
                     topBar = {
                         DuckitTopAppBar(
-                            title = currentScreen ?: NavRoute.Home.name,
-                            canNavigateBack = currentScreen != NavRoute.Home.name,
+                            title = currentScreen ?: ScreenRoute.Home.name,
+                            canNavigateBack = currentScreen != ScreenRoute.Home.name,
                             navigateUp = { navController.navigateUp() },
                             actions = { actions() }
                         )
@@ -66,17 +68,21 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = NavRoute.Home.name
+                        startDestination = ScreenRoute.Home.name
                     ) {
-                        composable(NavRoute.Home.name) {
+                        composable(ScreenRoute.Home.name) {
                             HomeScreen(
-                                modifier = Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController
                             )
                         }
-                        composable(NavRoute.Access.name) {
-
+                        composable(ScreenRoute.Access.name) {
+                            AuthScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController
+                            )
                         }
-                        composable(NavRoute.Create.name) {
+                        composable(ScreenRoute.Create.name) {
 
                         }
                     }
@@ -101,4 +107,3 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
-

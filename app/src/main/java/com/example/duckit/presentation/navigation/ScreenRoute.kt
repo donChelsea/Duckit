@@ -1,6 +1,6 @@
 package com.example.duckit.presentation.navigation
 
-enum class NavRoute {
+enum class ScreenRoute {
     Home,
     Access,
     Create

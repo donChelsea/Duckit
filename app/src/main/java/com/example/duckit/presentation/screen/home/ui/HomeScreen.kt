@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.onEach
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    //navController: NavController,
+    navController: NavController,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
