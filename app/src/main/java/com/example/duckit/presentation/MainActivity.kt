@@ -21,15 +21,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.duckit.common.auth.UserManager
 import com.example.duckit.presentation.navigation.DuckitTopAppBar
 import com.example.duckit.presentation.navigation.ScreenRoute
 import com.example.duckit.presentation.screen.auth.ui.AuthScreen
 import com.example.duckit.presentation.screen.home.ui.HomeScreen
 import com.example.duckit.ui.theme.DuckitTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var userManager: UserManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,21 +43,25 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = navBackStackEntry?.destination?.route
+            val isUserSignedIn = userManager.isSignedIn
+
             @Composable fun actions() =
-                if (currentScreen != ScreenRoute.Access.name) {
+                if (!isUserSignedIn && currentScreen != ScreenRoute.Access.name) {
                     IconButton(onClick = { navController.navigate(ScreenRoute.Access.name) }) {
                         Icon(
                             imageVector = Icons.Filled.AccountCircle,
                             contentDescription = "Sign in",
                         )
                     }
-                } else {
+                } else if (isUserSignedIn && currentScreen != ScreenRoute.Create.name) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Create,
                             contentDescription = "Create post",
                         )
                     }
+                } else {
+                    Unit
                 }
 
             DuckitTheme {

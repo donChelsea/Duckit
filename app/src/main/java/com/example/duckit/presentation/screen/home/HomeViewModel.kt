@@ -1,6 +1,7 @@
 package com.example.duckit.presentation.screen.home
 
 import com.example.duckit.common.Resource
+import com.example.duckit.common.auth.UserManager
 import com.example.duckit.common.network.ConnectivityObserver
 import com.example.duckit.domain.usecase.GetPostsUseCase
 import com.example.duckit.presentation.model.mapper.toUiModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getPostsUseCase: GetPostsUseCase,
     private val connectivityObserver: ConnectivityObserver,
+    private val userManager: UserManager,
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiAction>() {
 
     private val _state = MutableStateFlow(HomeUiState())
@@ -39,10 +41,13 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> updateState(ScreenState.Error(message = result.message.orEmpty()))
                 is Resource.Loading -> updateState(ScreenState.Loading)
-                is Resource.Success -> {
-                    result.data?.let { posts ->
-                        updateState(ScreenState.Data(items = posts.map { it.toUiModel() }))
-                    }
+                is Resource.Success -> result.data?.let { posts ->
+                    updateState(
+                        ScreenState.Data(
+                            items = posts.map { it.toUiModel() },
+                            isSignedIn = userManager.isSignedIn,
+                        )
+                    )
                 }
             }
         }

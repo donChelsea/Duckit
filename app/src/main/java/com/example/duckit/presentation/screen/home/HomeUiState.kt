@@ -23,5 +23,6 @@ sealed class ScreenState {
     @Immutable
     data class Data(
         val items: List<PostUiModel> = emptyList(),
+        val isSignedIn: Boolean = false,
     ) : ScreenState()
 }

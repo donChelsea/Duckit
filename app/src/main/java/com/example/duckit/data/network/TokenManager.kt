@@ -1,7 +1,9 @@
-package com.example.duckit.common.network
+package com.example.duckit.data.network
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.duckit.presentation.util.KEY_TOKEN
+import com.example.duckit.presentation.util.PREF_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +15,7 @@ class TokenManager @Inject constructor(
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
-    suspend fun saveToken(token: String?) {
+    fun saveToken(token: String) {
         editor.putString(KEY_TOKEN, token)
         editor.apply()
     }
@@ -24,8 +26,7 @@ class TokenManager @Inject constructor(
     val isTokenSaved: Boolean
         get() = sharedPreferences.contains(KEY_TOKEN)
 
-    companion object {
-        private const val PREF_NAME = "shared_prefs"
-        private const val KEY_TOKEN = "auth_token"
+    fun removeToken() {
+        sharedPreferences.edit().remove(KEY_TOKEN).apply()
     }
 }

@@ -58,6 +58,7 @@ fun HomeLayout(
         is ScreenState.Data -> HomeContent(
             modifier = modifier,
             posts = state.screenState.items,
+            isSignedIn = state.screenState.isSignedIn,
             onAction = onAction
         )
     }
@@ -67,6 +68,7 @@ fun HomeLayout(
 fun HomeContent(
     modifier: Modifier = Modifier,
     posts: List<PostUiModel>,
+    isSignedIn: Boolean,
     onAction: (HomeUiAction) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
@@ -76,7 +78,7 @@ fun HomeContent(
         ) { post ->
             UpvoteCard(
                 post = post,
-                canVote = true,
+                canVote = isSignedIn,
                 onUpvote = {  },
                 onDownvote = {  }
             )
@@ -91,6 +93,7 @@ fun PreviewHomeContent() {
     DuckitTheme {
         HomeContent(
             posts = listOf(mockPostUiModel1, mockPostUiModel2),
+            isSignedIn = true,
             onAction = {}
         )
     }
