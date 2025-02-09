@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.duckit.presentation.component.animation.ProgressAnimation
+import com.example.duckit.ui.theme.DuckitTheme
 
 @Composable
 fun ShowLoading() {
@@ -21,5 +22,7 @@ fun ShowLoading() {
 @Composable
 @Preview(showBackground = true)
 fun PreviewLoadingScreen() {
-    ShowLoading()
+    DuckitTheme {
+        ShowLoading()
+    }
 }

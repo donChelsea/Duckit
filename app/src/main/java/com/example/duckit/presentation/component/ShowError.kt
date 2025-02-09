@@ -20,6 +20,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.duckit.R
+import com.example.duckit.ui.theme.DuckitTheme
 
 @Composable
 fun ShowError(
@@ -54,8 +55,10 @@ fun ShowError(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
 fun PreviewShowError() {
-    ShowError("This is an error.")
+    DuckitTheme {
+        ShowError("This is an error.")
+    }
 }

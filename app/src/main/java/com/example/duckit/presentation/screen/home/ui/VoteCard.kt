@@ -35,6 +35,7 @@ import coil.request.ImageRequest
 import com.example.duckit.R
 import com.example.duckit.presentation.model.PostUiModel
 import com.example.duckit.presentation.util.mockPostUiModel1
+import com.example.duckit.ui.theme.DuckitTheme
 
 @Composable
 fun UpvoteCard(
@@ -133,9 +134,11 @@ fun UpvoteCard(
 @Preview(showBackground = true)
 @Composable
 fun PreviewVoteCard() {
-    UpvoteCard(
-        post = mockPostUiModel1,
-        onDownvote = {},
-        onUpvote = {},
-    )
+    DuckitTheme {
+        UpvoteCard(
+            post = mockPostUiModel1,
+            onDownvote = {},
+            onUpvote = {},
+        )
+    }
 }

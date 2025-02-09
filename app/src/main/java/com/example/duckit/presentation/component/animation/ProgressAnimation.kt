@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ProgressAnimation() {
     val dots = listOf(
