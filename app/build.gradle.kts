@@ -64,7 +64,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.kt.coil.compose)
 
     // Dagger/Hilt
     implementation(libs.hilt.android.v255)

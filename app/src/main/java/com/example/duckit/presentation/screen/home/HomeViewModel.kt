@@ -1,6 +1,7 @@
 package com.example.duckit.presentation.screen.home
 
 import com.example.duckit.common.Resource
+import com.example.duckit.common.network.ConnectivityObserver
 import com.example.duckit.domain.usecase.GetPostsUseCase
 import com.example.duckit.presentation.model.mapper.toUiModel
 import com.example.duckit.presentation.util.BaseViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPostsUseCase: GetPostsUseCase
+    private val getPostsUseCase: GetPostsUseCase,
+    private val connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiAction>() {
 
     private val _state = MutableStateFlow(HomeUiState())
@@ -22,21 +24,24 @@ class HomeViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     init {
-        refresh()
+        safeLaunch {
+            connectivityObserver.isConnected.collectLatest { isConnected ->
+                if (isConnected) refresh()
+                else updateState(ScreenState.Error(message = "Internet unavailable."))
+            }
+        }
     }
 
     override fun handleAction(action: HomeUiAction) {}
 
-    private fun refresh() {
-        safeLaunch {
-            getPostsUseCase().collectLatest { result ->
-                when (result) {
-                    is Resource.Error -> updateState(ScreenState.Error(message = result.message.orEmpty()))
-                    is Resource.Loading -> updateState(ScreenState.Loading)
-                    is Resource.Success -> {
-                        result.data?.let { posts ->
-                            updateState(ScreenState.Data(items = posts.map { it.toUiModel() }))
-                        }
+    private suspend fun refresh() {
+        getPostsUseCase().collectLatest { result ->
+            when (result) {
+                is Resource.Error -> updateState(ScreenState.Error(message = result.message.orEmpty()))
+                is Resource.Loading -> updateState(ScreenState.Loading)
+                is Resource.Success -> {
+                    result.data?.let { posts ->
+                        updateState(ScreenState.Data(items = posts.map { it.toUiModel() }))
                     }
                 }
             }

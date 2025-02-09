@@ -1,12 +1,15 @@
 package com.example.duckit.data.di
 
+import android.content.Context
 import com.example.duckit.BuildConfig.BASE_URL
+import com.example.duckit.common.network.ConnectivityObserver
 import com.example.duckit.data.repository.PostRepositoryImpl
 import com.example.duckit.data.source.DuckitApi
 import com.example.duckit.domain.repository.PostRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -42,4 +45,10 @@ object DataModule {
     @Singleton
     fun providePostRepository(api: DuckitApi): PostRepository =
         PostRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideConnectivityObserver(
+        @ApplicationContext context: Context
+    ): ConnectivityObserver = ConnectivityObserver(context)
 }
