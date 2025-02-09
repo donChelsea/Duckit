@@ -10,8 +10,10 @@ data class AuthUiState(
 
 @Immutable
 sealed class AuthUiEvent {
-    data object OnSignUp: AuthUiEvent()
-    data object OnSignIn: AuthUiEvent()
+    data object OnAuthorized : AuthUiEvent()
+
+    @Immutable
+    data class OnError(val message: String) : AuthUiEvent()
 }
 
 @Immutable

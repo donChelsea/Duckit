@@ -1,6 +1,10 @@
 package com.example.duckit.presentation.screen.auth
 
+import com.example.duckit.common.Resource
 import com.example.duckit.common.network.ConnectivityObserver
+import com.example.duckit.common.network.TokenManager
+import com.example.duckit.domain.usecase.SignInUseCase
+import com.example.duckit.domain.usecase.SignUpUseCase
 import com.example.duckit.presentation.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val connectivityObserver: ConnectivityObserver,
+    private val tokenManager: TokenManager,
+    private val signUpUseCase: SignUpUseCase,
+    private val signInUseCase: SignInUseCase,
 ) : BaseViewModel<AuthUiState, AuthUiEvent, AuthUiAction>() {
 
     private val _state = MutableStateFlow(AuthUiState())
@@ -22,31 +29,36 @@ class AuthViewModel @Inject constructor(
     init {
         safeLaunch {
             connectivityObserver.isConnected.collectLatest { isConnected ->
-                if (isConnected) refresh()
-                else updateState(ScreenState.Error(message = "Internet unavailable."))
+                if (!isConnected) updateState(ScreenState.Error(message = "Internet unavailable."))
             }
         }
     }
 
     override fun handleAction(action: AuthUiAction) {
         when (action) {
-            is AuthUiAction.OnSignIn -> emitUiEvent(AuthUiEvent.OnSignIn)
-            is AuthUiAction.OnSignUp -> emitUiEvent(AuthUiEvent.OnSignUp)
+            is AuthUiAction.OnSignIn -> {
+                safeLaunch {
+                    processToken(signInUseCase(action.credentials))
+                }
+            }
+
+            is AuthUiAction.OnSignUp -> {
+                safeLaunch {
+                    processToken(signUpUseCase(action.credentials))
+                }
+            }
         }
     }
 
-    private suspend fun refresh() {
-//        getPostsUseCase().collectLatest { result ->
-//            when (result) {
-//                is Resource.Error -> updateState(ScreenState.Error(message = result.message.orEmpty()))
-//                is Resource.Loading -> updateState(ScreenState.Loading)
-//                is Resource.Success -> {
-//                    result.data?.let { posts ->
-//                        updateState(ScreenState.Data(items = posts.map { it.toUiModel() }))
-//                    }
-//                }
-//            }
-//        }
+    private suspend fun processToken(result: Resource<String>) {
+        when (result) {
+            is Resource.Error -> emitUiEvent(AuthUiEvent.OnError(message = result.message.orEmpty()))
+            is Resource.Success -> {
+                tokenManager.saveToken(token = result.data.orEmpty())
+                emitUiEvent(AuthUiEvent.OnAuthorized)
+            }
+            else -> {}
+        }
     }
 
     private fun updateState(screenState: ScreenState) =

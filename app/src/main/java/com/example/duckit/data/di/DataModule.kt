@@ -3,6 +3,7 @@ package com.example.duckit.data.di
 import android.content.Context
 import com.example.duckit.BuildConfig.BASE_URL
 import com.example.duckit.common.network.ConnectivityObserver
+import com.example.duckit.common.network.TokenManager
 import com.example.duckit.data.repository.PostRepositoryImpl
 import com.example.duckit.data.source.DuckitApi
 import com.example.duckit.domain.repository.PostRepository
@@ -51,4 +52,10 @@ object DataModule {
     fun provideConnectivityObserver(
         @ApplicationContext context: Context
     ): ConnectivityObserver = ConnectivityObserver(context)
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(
+        @ApplicationContext context: Context
+    ): TokenManager = TokenManager(context)
 }

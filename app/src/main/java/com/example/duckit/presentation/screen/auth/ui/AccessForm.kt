@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -39,14 +40,19 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.duckit.domain.model.Credentials
 import com.example.duckit.ui.theme.DuckitTheme
+
+const val SIGN_IN_TAG = "signin"
 
 @Composable
 fun AccessForm(
@@ -102,6 +108,34 @@ fun AccessForm(
         ) {
             Text("Sign up")
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        val annotatedString = buildAnnotatedString {
+            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+                append("Already have an account? ")
+            }
+
+            pushStringAnnotation(tag = SIGN_IN_TAG, annotation = SIGN_IN_TAG)
+            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                append("Sign in.")
+            }
+            pop()
+        }
+
+        ClickableText(
+            text = annotatedString,
+            style = MaterialTheme.typography.titleLarge,
+            onClick = { offset ->
+                annotatedString.getStringAnnotations(
+                    tag = SIGN_IN_TAG,
+                    start = offset,
+                    end = offset
+                ).firstOrNull()?.let {
+                    if (checkCredentials(credentials, context)) onSignIn(credentials)
+                }
+            }
+        )
     }
 }
 
@@ -194,7 +228,7 @@ fun checkCredentials(creds: Credentials, context: Context): Boolean {
     if (creds.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(creds.email).matches()) {
         return true
     } else {
-        Toast.makeText(context, "Wrong credentials", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Something's wrong with the credentials.", Toast.LENGTH_SHORT).show()
         return false
     }
 }
