@@ -16,15 +16,19 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0."
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://nametag-duckit-2.uc.r.appspot.com/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "BASE_URL", "\"https://nametag-duckit-2.uc.r.appspot.com/\"")
         }
     }
     compileOptions {
@@ -36,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -58,9 +63,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // Dagger/Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.android.v255)
+    kapt(libs.hilt.compiler.v255)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -68,7 +76,7 @@ dependencies {
 
     // Retrofit + Gson + OkHttp
     implementation(libs.retrofit)
-    implementation(libs.gson)
+    implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
     // Timber

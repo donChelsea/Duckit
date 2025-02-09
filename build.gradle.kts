@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath(libs.hilt.android.gradle.plugin)
+        classpath(libs.hilt.android.gradle.plugin.v255)
     }
 }
 plugins {
