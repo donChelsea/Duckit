@@ -9,17 +9,30 @@ data class HomeUiState(
 )
 
 @Immutable
-sealed class HomeUiEvent
+sealed class HomeUiEvent {
+    @Immutable
+    data class OnError(val message: String) : HomeUiEvent()
+    data object OnConfirmDialog : HomeUiEvent()
+}
 
 @Immutable
-sealed class HomeUiAction
+sealed class HomeUiAction {
+    @Immutable
+    data class OnUpvote(val postId: String) : HomeUiAction()
+
+    @Immutable
+    data class OnDownvote(val postId: String) : HomeUiAction()
+    data object OnConfirmDialog : HomeUiAction()
+}
 
 @Immutable
 sealed class ScreenState {
     data object Initial : ScreenState()
     data object Loading : ScreenState()
+
     @Immutable
     data class Error(val message: String) : ScreenState()
+
     @Immutable
     data class Data(
         val items: List<PostUiModel> = emptyList(),

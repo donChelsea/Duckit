@@ -1,8 +1,8 @@
 package com.example.duckit.presentation.screen.auth
 
-import com.example.duckit.common.Resource
 import com.example.duckit.common.auth.UserManager
 import com.example.duckit.common.network.ConnectivityObserver
+import com.example.duckit.common.network.Resource
 import com.example.duckit.domain.model.Credentials
 import com.example.duckit.domain.usecase.SignInUseCase
 import com.example.duckit.domain.usecase.SignUpUseCase
@@ -37,22 +37,18 @@ class AuthViewModel @Inject constructor(
 
     override fun handleAction(action: AuthUiAction) {
         when (action) {
-            is AuthUiAction.OnSignIn -> {
-                safeLaunch {
-                    processToken(
-                        credentials = action.credentials,
-                        result = signInUseCase(action.credentials)
-                    )
-                }
+            is AuthUiAction.OnSignIn -> safeLaunch {
+                processToken(
+                    credentials = action.credentials,
+                    result = signInUseCase(action.credentials)
+                )
             }
 
-            is AuthUiAction.OnSignUp -> {
-                safeLaunch {
-                    processToken(
-                        credentials = action.credentials,
-                        result = signUpUseCase(action.credentials)
-                    )
-                }
+            is AuthUiAction.OnSignUp -> safeLaunch {
+                processToken(
+                    credentials = action.credentials,
+                    result = signUpUseCase(action.credentials)
+                )
             }
         }
     }
@@ -68,6 +64,7 @@ class AuthViewModel @Inject constructor(
                 )
                 emitUiEvent(AuthUiEvent.OnAuthorized)
             }
+
             else -> {}
         }
     }

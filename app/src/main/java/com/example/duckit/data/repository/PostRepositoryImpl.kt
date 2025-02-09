@@ -1,6 +1,6 @@
 package com.example.duckit.data.repository
 
-import com.example.duckit.common.Resource
+import com.example.duckit.common.network.Resource
 import com.example.duckit.data.source.DuckitApi
 import com.example.duckit.data.source.model.mapper.ErrorCodeMapper
 import com.example.duckit.data.source.model.mapper.toDomain
@@ -59,11 +59,29 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upvote(postId: String): Resource<Int> {
-        TODO("Not yet implemented")
+        return try {
+            val response = api.upvote(postId).awaitResponse()
+            if (response.isSuccessful) {
+                Resource.Success(data = response.body()?.upvotes)
+            } else {
+                Resource.Error(message = response.message() ?: "Couldn't add upvote.")
+            }
+        } catch (e: Exception) {
+            Resource.Error(message = e.message ?: "Having trouble voting.")
+        }
     }
 
     override suspend fun downvote(postId: String): Resource<Int> {
-        TODO("Not yet implemented")
+        return try {
+            val response = api.downvote(postId).awaitResponse()
+            if (response.isSuccessful) {
+                Resource.Success(data = response.body()?.upvotes)
+            } else {
+                Resource.Error(message = response.message() ?: "Couldn't add downvote.")
+            }
+        } catch (e: Exception) {
+            Resource.Error(message = e.message ?: "Having trouble voting.")
+        }
     }
 
     override suspend fun createPost(newPost: NewPost): Resource<Unit> {

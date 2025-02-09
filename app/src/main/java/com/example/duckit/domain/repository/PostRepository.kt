@@ -1,6 +1,6 @@
 package com.example.duckit.domain.repository
 
-import com.example.duckit.common.Resource
+import com.example.duckit.common.network.Resource
 import com.example.duckit.domain.model.NewPost
 import com.example.duckit.domain.model.Credentials
 import com.example.duckit.domain.model.Post

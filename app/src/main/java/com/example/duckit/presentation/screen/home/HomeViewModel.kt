@@ -1,9 +1,11 @@
 package com.example.duckit.presentation.screen.home
 
-import com.example.duckit.common.Resource
+import com.example.duckit.common.network.Resource
 import com.example.duckit.common.auth.UserManager
 import com.example.duckit.common.network.ConnectivityObserver
+import com.example.duckit.domain.usecase.DownvoteUseCase
 import com.example.duckit.domain.usecase.GetPostsUseCase
+import com.example.duckit.domain.usecase.UpvoteUseCase
 import com.example.duckit.presentation.model.mapper.toUiModel
 import com.example.duckit.presentation.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getPostsUseCase: GetPostsUseCase,
+    private val upvoteUseCase: UpvoteUseCase,
+    private val downvoteUseCase: DownvoteUseCase,
     private val connectivityObserver: ConnectivityObserver,
     private val userManager: UserManager,
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiAction>() {
@@ -34,7 +38,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun handleAction(action: HomeUiAction) {}
+    override fun handleAction(action: HomeUiAction) {
+        when (action) {
+            is HomeUiAction.OnDownvote -> safeLaunch {
+                processVote(downvoteUseCase(action.postId))
+            }
+
+            is HomeUiAction.OnUpvote -> safeLaunch {
+                processVote(upvoteUseCase(action.postId))
+            }
+
+            HomeUiAction.OnConfirmDialog -> emitUiEvent(HomeUiEvent.OnConfirmDialog)
+        }
+    }
 
     private suspend fun refresh() {
         getPostsUseCase().collectLatest { result ->
@@ -50,6 +66,18 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun processVote(result: Resource<Int>) {
+        when (result) {
+            is Resource.Error -> emitUiEvent(
+                HomeUiEvent.OnError(
+                    result.message ?: "Unknown error."
+                )
+            )
+
+            else -> {}
         }
     }
 

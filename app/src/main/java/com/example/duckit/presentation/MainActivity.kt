@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 } else if (isUserSignedIn && currentScreen != ScreenRoute.Create.name) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigate(ScreenRoute.Create.name) }) {
                         Icon(
                             imageVector = Icons.Filled.Create,
                             contentDescription = "Create post",
@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         composable(ScreenRoute.Home.name) {
                             HomeScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                navController = navController
+                                navController = navController,
                             )
                         }
                         composable(ScreenRoute.Access.name) {

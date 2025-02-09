@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,6 +48,7 @@ fun UpvoteCard(
 ) {
     with(post) {
         var upvotes by remember { mutableIntStateOf(upvotes) }
+        val thumbColor = if (canVote) MaterialTheme.colorScheme.onBackground else Color.Gray
 
         Column(
             modifier = modifier.padding(8.dp)
@@ -92,18 +94,21 @@ fun UpvoteCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.wrapContentWidth()
+                    modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .wrapContentWidth()
                 ) {
                     IconButton(
                         enabled = canVote,
                         onClick = {
+                            onUpvote(id)
                             upvotes++
                         }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.thumb_up),
                             contentDescription = "Upvote",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = thumbColor,
                         )
                     }
 
@@ -116,13 +121,14 @@ fun UpvoteCard(
                     IconButton(
                         enabled = canVote,
                         onClick = {
+                            onDownvote(id)
                             upvotes--
                         }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.thumb_down),
                             contentDescription = "Downvote",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = thumbColor,
                         )
                     }
                 }
