@@ -9,7 +9,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.duckit.R
 import com.example.duckit.ui.theme.DuckitTheme
 
 @Composable
@@ -24,8 +26,8 @@ fun VotingAlertDialog(
             onDismissRequest = {
                 shouldShowDialog.value = false
             },
-            title = { Text(text = "Sign in to vote!") },
-            text = { Text(text = "You can vote when you sign in or create an account.") },
+            title = { Text(text = stringResource(R.string.sign_in_to_vote)) },
+            text = { Text(text = stringResource(R.string.must_be_signed_in)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -34,7 +36,7 @@ fun VotingAlertDialog(
                     }
                 ) {
                     Text(
-                        text = "Get access",
+                        text = stringResource(R.string.get_access),
                         color = MaterialTheme.colorScheme.background,
                     )
                 }
@@ -44,7 +46,7 @@ fun VotingAlertDialog(
                     onClick = { shouldShowDialog.value = false }
                 ) {
                     Text(
-                        text = "Close",
+                        text = stringResource(R.string.close),
                         color = MaterialTheme.colorScheme.background,
                     )
                 }

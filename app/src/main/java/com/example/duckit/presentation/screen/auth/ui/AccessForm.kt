@@ -41,6 +41,8 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -49,7 +51,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.example.duckit.R
 import com.example.duckit.domain.model.Credentials
 import com.example.duckit.ui.theme.DuckitTheme
 
@@ -69,7 +71,7 @@ fun AccessForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 30.dp)
+            .padding(horizontal = dimensionResource(R.dimen.padding_30))
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -78,12 +80,12 @@ fun AccessForm(
             Image(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "",
-                modifier = Modifier.size(90.dp),
+                modifier = Modifier.size(dimensionResource(R.dimen.icon_size_large)),
                 colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_40)))
 
         EmailField(
             value = credentials.email,
@@ -98,29 +100,29 @@ fun AccessForm(
             },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
         Button(
             onClick = {
                 if (checkCredentials(credentials, context)) onSignUp(credentials)
             },
             enabled = credentials.isNotEmpty(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_5)),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Sign up")
+            Text(stringResource(R.string.sign_up))
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
 
         val annotatedString = buildAnnotatedString {
             withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
-                append("Already have an account? ")
+                append(stringResource(R.string.already_have_account))
             }
 
             pushStringAnnotation(tag = SIGN_IN_TAG, annotation = SIGN_IN_TAG)
             withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                append("Sign in.")
+                append(stringResource(R.string.sign_in_period))
             }
             pop()
         }
@@ -230,7 +232,7 @@ private fun checkCredentials(creds: Credentials, context: Context): Boolean {
     if (creds.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(creds.email).matches()) {
         return true
     } else {
-        Toast.makeText(context, "Something's wrong with the credentials.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.something_wrong_creds), Toast.LENGTH_SHORT).show()
         return false
     }
 }

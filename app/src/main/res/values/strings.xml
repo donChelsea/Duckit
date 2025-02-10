@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Duckit</string>
+    <string name="sign_in_to_vote">Sign in to vote!</string>
+    <string name="must_be_signed_in">You can vote when you sign in or create an account.</string>
+    <string name="get_access">Get access</string>
+    <string name="close">Close</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in_period">Sign in.</string>
+    <string name="already_have_account">Already have an account?&#160;</string>
+    <string name="something_wrong_creds">Something\'s wrong with the credentials.</string>
+    <string name="add_headline_image_error">You\'ll need to add a headline and image first!</string>
+    <string name="or">OR</string>
+    <string name="post">Post</string>
+    <string name="pick_an_image">Pick an image</string>
+    <string name="headline">Headline</string>
+    <string name="enter_headline">Enter a headline</string>
+    <string name="image_url">Image URL</string>
+    <string name="enter_image_url">Enter the URL to an image</string>
 </resources>

@@ -40,7 +40,7 @@ fun ShowError(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = "Warning icon",
+                contentDescription = "",
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.requiredSize(dimensionResource(R.dimen.size_48)),
             )

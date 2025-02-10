@@ -27,9 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -51,7 +51,7 @@ fun UpvoteCard(
         val thumbColor = if (canVote) MaterialTheme.colorScheme.onBackground else Color.Gray
 
         Column(
-            modifier = modifier.padding(8.dp)
+            modifier = modifier.padding(dimensionResource(R.dimen.padding_8))
         ) {
             val context = LocalContext.current
             val placeholder = R.drawable.ic_launcher_foreground
@@ -72,27 +72,27 @@ fun UpvoteCard(
                 color = MaterialTheme.colorScheme.onBackground,
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_4)))
 
             AsyncImage(
                 model = imageRequest,
-                contentDescription = "Post image",
+                contentDescription = "",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_5)))
                     .fillMaxWidth()
-                    .requiredHeight(300.dp)
+                    .requiredHeight(dimensionResource(R.dimen.image_size))
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_4)))
 
             Card(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.background)
-                    .clip(RoundedCornerShape(50.dp))
+                    .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_50)))
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_4)),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .background(color = MaterialTheme.colorScheme.background)
@@ -107,7 +107,7 @@ fun UpvoteCard(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.thumb_up),
-                            contentDescription = "Upvote",
+                            contentDescription = "",
                             tint = thumbColor,
                         )
                     }
@@ -127,7 +127,7 @@ fun UpvoteCard(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.thumb_down),
-                            contentDescription = "Downvote",
+                            contentDescription = "",
                             tint = thumbColor,
                         )
                     }

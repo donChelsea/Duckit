@@ -2,6 +2,7 @@ package com.example.duckit.domain.network
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,11 +18,11 @@ class ConnectivityObserver @Inject constructor(
 
     init {
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: android.net.Network) {
+            override fun onAvailable(network: Network) {
                 _isConnected.value = true
             }
 
-            override fun onLost(network: android.net.Network) {
+            override fun onLost(network: Network) {
                 _isConnected.value = false
             }
         })

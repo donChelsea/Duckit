@@ -2,4 +2,18 @@
 <resources>
     <dimen name="size_48">48dp</dimen>
     <dimen name="height_16">16dp</dimen>
+    <dimen name="corner_radius_5">5dp</dimen>
+    <dimen name="corner_radius_50">50dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
+    <dimen name="height_40">40dp</dimen>
+    <dimen name="height_4">4dp</dimen>
+    <dimen name="height_20">20dp</dimen>
+    <dimen name="icon_size_large">90dp</dimen>
+    <dimen name="separator_width">2dp</dimen>
+    <dimen name="border_width">1dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
+    <dimen name="image_size">300dp</dimen>
+
 </resources>

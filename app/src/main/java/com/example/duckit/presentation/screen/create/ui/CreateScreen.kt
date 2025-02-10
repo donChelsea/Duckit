@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,11 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,10 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -52,6 +50,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.duckit.R
 import com.example.duckit.domain.model.NewPost
 import com.example.duckit.presentation.navigation.ScreenRoute
 import com.example.duckit.presentation.screen.create.CreateUiAction
@@ -73,10 +72,7 @@ fun CreateScreen(
         lifecycleOwner.lifecycleScope.launch {
             viewModel.events.collectLatest { event ->
                 when (event) {
-                    CreateUiEvent.OnPostFinished -> {
-                        println("post created")
-                        //navController.navigate(ScreenRoute.Home.name)
-                    }
+                    CreateUiEvent.OnPostFinished -> navController.navigate(ScreenRoute.Home.name)
                     is CreateUiEvent.OnError -> Toast.makeText(
                         context,
                         event.message,
@@ -102,14 +98,15 @@ fun CreateContent(
     var headline by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val getContent =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             selectedImageUri = uri
         }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(30.dp),
+            .padding(dimensionResource(R.dimen.padding_30)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -120,12 +117,12 @@ fun CreateContent(
             Image(
                 imageVector = Icons.Default.Create,
                 contentDescription = "",
-                modifier = Modifier.size(90.dp),
+                modifier = Modifier.size(dimensionResource(R.dimen.icon_size_large)),
                 colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_40)))
 
         OutlinedTextField(
             value = headline,
@@ -135,12 +132,12 @@ fun CreateContent(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text
             ),
-            placeholder = { Text("Enter a headline") },
-            label = { Text("Enter a headline") },
+            placeholder = { Text(stringResource(R.string.headline)) },
+            label = { Text(stringResource(R.string.enter_headline)) },
             singleLine = true,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
 
         OutlinedTextField(
             value = imageUrl,
@@ -150,41 +147,45 @@ fun CreateContent(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Text
             ),
-            placeholder = { Text("Image URL") },
-            label = { Text("Enter the URL to an image") },
+            placeholder = { Text(stringResource(R.string.image_url)) },
+            label = { Text(stringResource(R.string.enter_image_url)) },
             singleLine = true,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
 
         HorizontalLineWithText()
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
-                .border(1.dp, Color.Gray, RoundedCornerShape(5.dp)),
+                .height(dimensionResource(R.dimen.image_size))
+                .border(
+                    width = dimensionResource(R.dimen.border_width),
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_5))
+                ),
             contentAlignment = Alignment.Center
         ) {
             if (selectedImageUri == null) {
                 Button(
-                    shape = RoundedCornerShape(5.dp),
+                    shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_5)),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
                         getContent.launch("image/*")
                     }
                 ) {
                     Text(
-                        text = "Pick an Image",
+                        text = stringResource(R.string.pick_an_image),
                         color = MaterialTheme.colorScheme.background
                     )
                 }
             } else {
                 Image(
                     painter = rememberAsyncImagePainter(selectedImageUri),
-                    contentDescription = "Selected Image",
+                    contentDescription = "",
                     modifier = Modifier
                         .fillMaxSize()
                         .aspectRatio(1f)
@@ -192,11 +193,11 @@ fun CreateContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.height_20)))
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_5)),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             onClick = {
                 if (checkNewPost(headline, imageUrl, selectedImageUri, context)) {
@@ -209,7 +210,7 @@ fun CreateContent(
             }
         ) {
             Text(
-                text = "Post",
+                text = stringResource(R.string.post),
                 color = MaterialTheme.colorScheme.background
             )
         }
@@ -226,16 +227,16 @@ fun HorizontalLineWithText() {
         Divider(
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.primary,
-            thickness = 2.dp,
+            thickness = dimensionResource(R.dimen.separator_width),
         )
         Text(
-            text = "OR",
-            modifier = Modifier.padding(horizontal = 16.dp)
+            text = stringResource(R.string.or),
+            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_16))
         )
         Divider(
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.primary,
-            thickness = 2.dp,
+            thickness = dimensionResource(R.dimen.separator_width),
         )
     }
 }
@@ -249,7 +250,11 @@ private fun checkNewPost(
     if (headline.isNotEmpty() && (imageUrl != null || selectedImageUri != null)) {
         return true
     } else {
-        Toast.makeText(context, "You'll need to add a headline and image first!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.add_headline_image_error),
+            Toast.LENGTH_SHORT
+        ).show()
         return false
     }
 }
