@@ -1,4 +1,4 @@
-package com.example.duckit.common.network
+package com.example.duckit.domain.network
 
 import android.content.Context
 import android.net.ConnectivityManager

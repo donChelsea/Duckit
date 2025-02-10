@@ -1,4 +1,4 @@
-package com.example.duckit.di
+package com.example.duckit.presentation.di
 
 import android.app.Application
 import coil.ImageLoader

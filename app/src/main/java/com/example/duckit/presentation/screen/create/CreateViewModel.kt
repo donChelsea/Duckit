@@ -1,9 +1,8 @@
 package com.example.duckit.presentation.screen.create
 
-import com.example.duckit.common.network.ConnectivityObserver
-import com.example.duckit.common.network.Resource
+import com.example.duckit.domain.network.ConnectivityObserver
+import com.example.duckit.domain.network.Resource
 import com.example.duckit.domain.usecase.CreatePostUseCase
-import com.example.duckit.presentation.screen.auth.AuthUiEvent
 import com.example.duckit.presentation.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

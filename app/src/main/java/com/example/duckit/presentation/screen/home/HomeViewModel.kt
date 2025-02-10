@@ -1,8 +1,8 @@
 package com.example.duckit.presentation.screen.home
 
-import com.example.duckit.common.network.Resource
-import com.example.duckit.common.auth.UserManager
-import com.example.duckit.common.network.ConnectivityObserver
+import com.example.duckit.domain.network.ConnectivityObserver
+import com.example.duckit.domain.network.Resource
+import com.example.duckit.domain.network.TokenManager
 import com.example.duckit.domain.usecase.DownvoteUseCase
 import com.example.duckit.domain.usecase.GetPostsUseCase
 import com.example.duckit.domain.usecase.UpvoteUseCase
@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(
     private val upvoteUseCase: UpvoteUseCase,
     private val downvoteUseCase: DownvoteUseCase,
     private val connectivityObserver: ConnectivityObserver,
-    private val userManager: UserManager,
+    private val tokenManager: TokenManager,
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiAction>() {
 
     private val _state = MutableStateFlow(HomeUiState())
@@ -61,7 +61,7 @@ class HomeViewModel @Inject constructor(
                     updateState(
                         ScreenState.Data(
                             items = posts.map { it.toUiModel() },
-                            isSignedIn = userManager.isSignedIn,
+                            isSignedIn = tokenManager.isTokenSaved,
                         )
                     )
                 }

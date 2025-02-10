@@ -1,6 +1,6 @@
 package com.example.duckit.data.repository
 
-import com.example.duckit.common.network.Resource
+import com.example.duckit.domain.network.Resource
 import com.example.duckit.data.source.DuckitApi
 import com.example.duckit.data.source.model.mapper.ErrorCodeMapper
 import com.example.duckit.data.source.model.mapper.toDomain

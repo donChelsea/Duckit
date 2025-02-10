@@ -21,7 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.duckit.common.auth.UserManager
+import com.example.duckit.domain.network.TokenManager
 import com.example.duckit.presentation.navigation.DuckitTopAppBar
 import com.example.duckit.presentation.navigation.ScreenRoute
 import com.example.duckit.presentation.screen.auth.ui.AuthScreen
@@ -35,7 +35,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var userManager: UserManager
+    lateinit var tokenManager: TokenManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = navBackStackEntry?.destination?.route
-            val isUserSignedIn = userManager.isSignedIn
+            val isUserSignedIn = tokenManager.isTokenSaved
 
             @Composable fun actions() =
                 if (!isUserSignedIn && currentScreen != ScreenRoute.Access.name) {

@@ -1,4 +1,4 @@
-package com.example.duckit.common.network
+package com.example.duckit.domain.network
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T?): Resource<T>(data)

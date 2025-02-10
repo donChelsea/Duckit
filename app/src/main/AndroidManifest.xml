@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Duckit"
-        android:name=".di.DuckitApp"
+        android:name=".presentation.di.DuckitApp"
         tools:targetApi="31">
         <activity
             android:name=".presentation.MainActivity"

@@ -1,4 +1,4 @@
-package com.example.duckit.data.network
+package com.example.duckit.domain.network
 
 import android.content.Context
 import android.content.SharedPreferences
