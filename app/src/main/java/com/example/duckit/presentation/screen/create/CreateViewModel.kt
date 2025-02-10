@@ -2,7 +2,8 @@ package com.example.duckit.presentation.screen.create
 
 import com.example.duckit.common.network.ConnectivityObserver
 import com.example.duckit.common.network.Resource
-import com.example.duckit.domain.model.Credentials
+import com.example.duckit.domain.usecase.CreatePostUseCase
+import com.example.duckit.presentation.screen.auth.AuthUiEvent
 import com.example.duckit.presentation.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,14 +11,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
-import java.io.File
-import java.io.InputStream
 import javax.inject.Inject
 
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
     private val connectivityObserver: ConnectivityObserver,
+    private val createPostUseCase: CreatePostUseCase,
 ) : BaseViewModel<CreateUiState, CreateUiEvent, CreateUiAction>() {
 
     private val _state = MutableStateFlow(CreateUiState())
@@ -35,31 +35,17 @@ class CreateViewModel @Inject constructor(
     override fun handleAction(action: CreateUiAction) {
         when (action) {
             is CreateUiAction.OnNewPost -> {
-                val uri = action.newPost.image
-                val s = convertURIToURL(uri.toString())
-                println("create: ${s.}")
-                println("create: https://${uri?.host}${uri?.encodedPath}\"")
+                safeLaunch {
+                    val result = createPostUseCase(action.newPost)
+                    when (result) {
+                        is Resource.Error -> emitUiEvent(CreateUiEvent.OnError(message = result.message.orEmpty()))
+                        is Resource.Success -> {
+                            emitUiEvent(CreateUiEvent.OnPostFinished)
+                        }
+                        else -> {}
+                    }
+                }
             }
-        }
-    }
-
-
-    fun convertURIToURL(uriString: String): InputStream? {
-        var file = File("filename")
-
-        val uri = file.toURI()
-        file = File(uri.toURL().file)
-        val `is` = uri.toURL().openStream()
-        `is`.close()
-        return `is`
-    }
-
-    private fun processToken(credentials: Credentials, result: Resource<String>) {
-        when (result) {
-            is Resource.Error -> emitUiEvent(CreateUiEvent.OnError(message = result.message.orEmpty()))
-            is Resource.Success -> {}
-
-            else -> {}
         }
     }
 

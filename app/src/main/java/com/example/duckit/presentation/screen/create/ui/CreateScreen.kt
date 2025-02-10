@@ -6,9 +6,12 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,12 +19,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -67,7 +72,10 @@ fun CreateScreen(
         lifecycleOwner.lifecycleScope.launch {
             viewModel.events.collectLatest { event ->
                 when (event) {
-                    CreateUiEvent.OnPostFinished -> navController.navigate(ScreenRoute.Home.name)
+                    CreateUiEvent.OnPostFinished -> {
+                        println("post created")
+                        //navController.navigate(ScreenRoute.Home.name)
+                    }
                     is CreateUiEvent.OnError -> Toast.makeText(
                         context,
                         event.message,
@@ -91,6 +99,7 @@ fun CreateContent(
 ) {
     val context = LocalContext.current
     var headline by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             selectedImageUri = uri
@@ -100,6 +109,7 @@ fun CreateContent(
         modifier = modifier
             .fillMaxSize()
             .padding(30.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -121,13 +131,32 @@ fun CreateContent(
             onValueChange = { headline = it },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text
             ),
             placeholder = { Text("Enter a headline") },
             label = { Text("Enter a headline") },
             singleLine = true,
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            value = imageUrl,
+            onValueChange = { imageUrl = it },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Text
+            ),
+            placeholder = { Text("Image URL") },
+            label = { Text("Enter the URL to an image") },
+            singleLine = true,
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        HorizontalLineWithText()
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -169,10 +198,10 @@ fun CreateContent(
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             onClick = {
-                if (checkNewPost(headline, selectedImageUri, context)) {
+                if (checkNewPost(headline, imageUrl, selectedImageUri, context)) {
                     val newPost = NewPost(
                         headline = headline,
-                        image = selectedImageUri
+                        image = imageUrl
                     )
                     onAction(CreateUiAction.OnNewPost(newPost))
                 }
@@ -186,11 +215,40 @@ fun CreateContent(
     }
 }
 
-private fun checkNewPost(headline: String, selectedImageUri: Uri?, context: Context): Boolean {
-    if (headline.isNotEmpty() && selectedImageUri != null) {
+@Composable
+fun HorizontalLineWithText() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Divider(
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.primary,
+            thickness = 2.dp,
+        )
+        Text(
+            text = "OR",
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Divider(
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.primary,
+            thickness = 2.dp,
+        )
+    }
+}
+
+private fun checkNewPost(
+    headline: String,
+    imageUrl: String?,
+    selectedImageUri: Uri?,
+    context: Context
+): Boolean {
+    if (headline.isNotEmpty() && (imageUrl != null || selectedImageUri != null)) {
         return true
     } else {
-        Toast.makeText(context, "You'll need to fill out every field first!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "You'll need to add a headline and image first!", Toast.LENGTH_SHORT).show()
         return false
     }
 }

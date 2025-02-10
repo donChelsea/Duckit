@@ -85,6 +85,15 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createPost(newPost: NewPost): Resource<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            val response = api.createPost(newPost).awaitResponse()
+            if (response.isSuccessful) {
+                Resource.Success(data = Unit)
+            } else {
+                Resource.Error(message = "Couldn't create new post.")
+            }
+        } catch (e: Exception) {
+            Resource.Error(message = e.message ?: "Having trouble creating new post.")
+        }
     }
 }
