@@ -41,13 +41,24 @@ fun AuthScreen(
         }
     }
 
+    AuthContent(
+        modifier = modifier,
+        onAction = viewModel::handleAction
+    )
+}
+
+@Composable
+fun AuthContent(
+    modifier: Modifier = Modifier,
+    onAction: (AuthUiAction) -> Unit
+) {
     AccessForm(
         modifier = modifier,
         onSignIn = { creds ->
-            viewModel.handleAction(AuthUiAction.OnSignIn(creds))
+            onAction(AuthUiAction.OnSignIn(creds))
         },
         onSignUp = { creds ->
-            viewModel.handleAction(AuthUiAction.OnSignUp(creds))
+            onAction(AuthUiAction.OnSignUp(creds))
         },
     )
 }

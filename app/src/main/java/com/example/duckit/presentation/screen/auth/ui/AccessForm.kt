@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -103,6 +104,7 @@ fun AccessForm(
                 if (checkCredentials(credentials, context)) onSignUp(credentials)
             },
             enabled = credentials.isNotEmpty(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -224,7 +226,7 @@ fun PasswordField(
     )
 }
 
-fun checkCredentials(creds: Credentials, context: Context): Boolean {
+private fun checkCredentials(creds: Credentials, context: Context): Boolean {
     if (creds.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(creds.email).matches()) {
         return true
     } else {

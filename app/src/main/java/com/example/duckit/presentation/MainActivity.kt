@@ -25,6 +25,7 @@ import com.example.duckit.common.auth.UserManager
 import com.example.duckit.presentation.navigation.DuckitTopAppBar
 import com.example.duckit.presentation.navigation.ScreenRoute
 import com.example.duckit.presentation.screen.auth.ui.AuthScreen
+import com.example.duckit.presentation.screen.create.ui.CreateScreen
 import com.example.duckit.presentation.screen.home.ui.HomeScreen
 import com.example.duckit.ui.theme.DuckitTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,14 +72,14 @@ class MainActivity : ComponentActivity() {
                             title = currentScreen ?: ScreenRoute.Home.name,
                             canNavigateBack = currentScreen != ScreenRoute.Home.name,
                             navigateUp = { navController.navigateUp() },
-                            actions = { actions() }
+                            actions = { actions() },
                         )
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = ScreenRoute.Home.name
+                        startDestination = ScreenRoute.Home.name,
                     ) {
                         composable(ScreenRoute.Home.name) {
                             HomeScreen(
@@ -89,11 +90,14 @@ class MainActivity : ComponentActivity() {
                         composable(ScreenRoute.Access.name) {
                             AuthScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                navController = navController
+                                navController = navController,
                             )
                         }
                         composable(ScreenRoute.Create.name) {
-
+                            CreateScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController,
+                            )
                         }
                     }
                 }
@@ -106,7 +110,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
