@@ -76,7 +76,7 @@ fun CreateScreen(
                     is CreateUiEvent.OnError -> Toast.makeText(
                         context,
                         event.message,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }

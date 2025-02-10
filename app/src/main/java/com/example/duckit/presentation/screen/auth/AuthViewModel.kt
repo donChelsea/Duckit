@@ -1,6 +1,5 @@
 package com.example.duckit.presentation.screen.auth
 
-import com.example.duckit.domain.model.Credentials
 import com.example.duckit.domain.network.ConnectivityObserver
 import com.example.duckit.domain.network.Resource
 import com.example.duckit.domain.network.TokenManager
@@ -30,7 +29,8 @@ class AuthViewModel @Inject constructor(
     init {
         safeLaunch {
             connectivityObserver.isConnected.collectLatest { isConnected ->
-                if (!isConnected) updateState(ScreenState.Error(message = "Internet unavailable."))
+                if (!isConnected) emitUiEvent(AuthUiEvent.OnError(message = "Internet unavailable."))
+                else emitUiEvent(AuthUiEvent.OnError(message = "Back online."))
             }
         }
     }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-
 @HiltViewModel
 class CreateViewModel @Inject constructor(
     private val connectivityObserver: ConnectivityObserver,
@@ -26,8 +25,8 @@ class CreateViewModel @Inject constructor(
     init {
         safeLaunch {
             connectivityObserver.isConnected.collectLatest { isConnected ->
-                if (!isConnected) updateState(ScreenState.Error(message = "Internet unavailable."))
-            }
+                if (!isConnected) emitUiEvent(CreateUiEvent.OnError(message = "Internet unavailable."))
+                else emitUiEvent(CreateUiEvent.OnError(message = "Back online."))            }
         }
     }
 
@@ -38,9 +37,7 @@ class CreateViewModel @Inject constructor(
                     val result = createPostUseCase(action.newPost)
                     when (result) {
                         is Resource.Error -> emitUiEvent(CreateUiEvent.OnError(message = result.message.orEmpty()))
-                        is Resource.Success -> {
-                            emitUiEvent(CreateUiEvent.OnPostFinished)
-                        }
+                        is Resource.Success -> emitUiEvent(CreateUiEvent.OnPostFinished)
                         else -> {}
                     }
                 }

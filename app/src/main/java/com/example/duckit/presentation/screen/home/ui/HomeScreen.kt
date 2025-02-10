@@ -49,7 +49,7 @@ fun HomeScreen(
                     is HomeUiEvent.OnError -> Toast.makeText(
                         context,
                         event.message,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
 
                     HomeUiEvent.OnConfirmDialog -> navController.navigate(ScreenRoute.Access.name)
